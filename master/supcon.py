@@ -6,11 +6,16 @@ from loaders import BaseModelDataset, TripletDataset, RandomRotation, RandomGaus
 from torch.utils.data import DataLoader
 from torchvision import transforms
 import copy
+import argparse
 
 
-def get_resnet50_data():
-    train, test = np.load("./data/v2_5k/train_sep.npz"), np.load("./data/v2_5k/test_sep.npz")
-    
+def get_resnet50_data(data_size="small"):
+
+    if data_size == "small": # 50 samples for each class
+        train, test = np.load("./data/5k_data/train_sep.npz"), np.load("./data/5k_data/test_sep.npz")
+    else: # 100 samples for each class
+        train, test = np.load("./data/10k_data/train_sep.npz"), np.load("./data/10k_data/test_sep.npz")
+
     transform = transforms.Compose([
         RandomRotation(degrees=30, p=0.2),
         RandomGaussianBlur(kernel_size=3, sigma=(0.1, 2.0), p=1),
@@ -25,8 +30,12 @@ def get_resnet50_data():
 
     return train_dataloader, test_dataloader
 
-def get_supcon_data():
-    train, test = np.load("./data/v2_5k/train_sep.npz"), np.load("./data/v2_5k/test_sep.npz")
+def get_supcon_data(data_size="small"):
+
+    if data_size == "small": # 50 samples for each class
+        train, test = np.load("./data/5k_data/train_sep.npz"), np.load("./data/5k_data/test_sep.npz")
+    else: # 100 samples for each class
+        train, test = np.load("./data/10k_data/train_sep.npz"), np.load("./data/10k_data/test_sep.npz")
     
     transform = transforms.Compose([
         RandomRotation(degrees=30, p=0.2),
@@ -50,11 +59,9 @@ def train_resnet50_classifier(device, train_loader, test_loader):
 
     optimizer = torch.optim.Adam(resnet50.parameters(), lr=1e-3)
     criterion = nn.CrossEntropyLoss()
-
-    best_loss = float("inf")
     best_acc = 0.0
     best_model = None
-    patience = 3
+    patience = 5
     patience_cnt = 0
 
     for e in range(100):
@@ -177,9 +184,6 @@ class SupConLoss(nn.Module):
 def supcon_finetune(encoder, device, train_loader, test_loader):
     optimizer = torch.optim.Adam(encoder.parameters(), lr=1e-6)
     criterion = SupConLoss()
-    margin = 5
-
-    best_loss = float("inf")
     best_acc = 0.0
     best_model = None
     patience = 7
@@ -189,7 +193,6 @@ def supcon_finetune(encoder, device, train_loader, test_loader):
     interim_acc = eval_register(encoder, device)
     print(f"Accuracy before contrastive fine-tune: {interim_acc:.2f}")
 
-    #encoder = encoder.to(device)
     for e in range(100):
         encoder.train()
         running_train_loss = 0.0
@@ -250,7 +253,7 @@ def supcon_finetune(encoder, device, train_loader, test_loader):
 
 
 def eval_register(encoder, device):
-    test = np.load("./data/v2_5k/register_sep.npz")
+    test = np.load("./data/register_sep.npz")
     references = torch.tensor(test["reference"], dtype=torch.float32).to(device)
     references = references.repeat(1, 3, 1, 1)
 
@@ -269,19 +272,24 @@ def eval_register(encoder, device):
 
     return acc
 
-def main():
+def main(args):
+
+    data_size = args.data_size
     print("Resnet50 training started")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    resnet_train_loader, resnet_test_loader = get_resnet50_data()
+    resnet_train_loader, resnet_test_loader = get_resnet50_data(data_size)
     encoder = train_resnet50_classifier(device, resnet_train_loader, resnet_test_loader)
     best_base_acc = eval_register(encoder, device)
     print(f"Best base accuracy: {best_base_acc:.2f}")
 
     print("Contrastive fine-tune started")
-    supcon_train_loader, supcon_test_loader = get_supcon_data()
+    supcon_train_loader, supcon_test_loader = get_supcon_data(data_size)
     finetuned_encoder = supcon_finetune(encoder, device, supcon_train_loader, supcon_test_loader)
     best_cont_acc = eval_register(finetuned_encoder, device)
     print(f"Best contrastive accuracy: {best_cont_acc:.2f}")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_size", type=str, default="small", help="small (5k) or large (10k)")
+    args = parser.parse_args()
+    main(args)
