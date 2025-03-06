@@ -95,7 +95,47 @@ class TripletDataset(Dataset):
             triplets.append([anchor, positive, negative])
         
         return triplets
-    
+
+class PairDataset(Dataset):
+    def __init__(self, image_data, labels, transform=None, num_pairs=1000):
+        self.image_data = torch.tensor(image_data, dtype=torch.float32).repeat(1, 3, 1, 1)
+        self.labels = torch.tensor(labels, dtype=torch.long)
+        self.transform = transform
+        self.pairs = self._generate_pairs(num_pairs)
+
+    def _generate_pairs(self, num_pairs):
+        pairs = []
+        unique_labels = torch.unique(self.labels).tolist()
+
+        for _ in range(num_pairs):
+            label = random.choice(unique_labels)
+            positive_indices = torch.where(self.labels == label)[0].tolist()
+            negative_indices = torch.where(self.labels != label)[0].tolist()
+
+            if len(positive_indices) > 1:
+                anchor, positive = random.sample(positive_indices, 2)
+                pairs.append((anchor, positive, 1))
+
+            if negative_indices:
+                anchor = random.choice(positive_indices)
+                negative = random.choice(negative_indices)
+                pairs.append((anchor, negative, 0))
+
+        return pairs
+
+    def __len__(self):
+        return len(self.pairs)
+
+    def __getitem__(self, idx):
+        anchor_idx, pair_idx, label = self.pairs[idx]
+        anchor = self.image_data[anchor_idx]
+        pair = self.image_data[pair_idx]
+
+        if self.transform:
+            anchor = self.transform(anchor)
+            pair = self.transform(pair)
+
+        return anchor, pair, torch.tensor(label, dtype=torch.float32)
 
 class RandomRotation:
     def __init__(self, degrees, p=0.5):
