@@ -45,6 +45,8 @@ The synthetic signature dataset is created by combining and augmenting Omniglot 
 ### Signature Identification Pipeline
 <img src="images/pipeline.png" width="100%" alt="Signature Identification Pipeline" />---
 
+---
+
 ## Results
 
 - The SupCon-based model achieves up to **20% higher accuracy** than the baseline ResNet50 classifier.
