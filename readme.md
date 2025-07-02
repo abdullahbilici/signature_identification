@@ -43,7 +43,7 @@ The synthetic signature dataset is created by combining and augmenting Omniglot 
 <img src="images/supcon_signs3.png" width="50%" alt="SupCon Synthetic Signatures" />
 
 ### Signature Identification Pipeline
-<img src="images/pipeline.png" width="100%" alt="Signature Identification Pipeline" />---
+<img src="images/pipeline.png" width="100%" alt="Signature Identification Pipeline" />
 
 ---
 
