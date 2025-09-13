@@ -31,9 +31,6 @@ To cite our work:
   doi={10.1109/SIU66497.2025.11112336}}
 ```
 
-**Keywords:**  
-Law; Face recognition; Data integrity; Neural networks; Contrastive learning; Writing; Signal processing; Digitization; Biometric authentication; Signature identification; contrastive learning; siamese neural network
-
 ---
 
 ## Key Features
