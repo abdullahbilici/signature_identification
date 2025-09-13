@@ -15,6 +15,14 @@ Handwritten signatures are a powerful biometric authentication tool reflecting a
 
 ---
 
+**Citation:**  
+A. Bilici, E. Olug, S. Beyden and C. Topal, "One-Shot Signature Identification with Contrastive Learning," 2025 33rd Signal Processing and Communications Applications Conference (SIU), Sile, Istanbul, Turkiye, 2025, pp. 1-4, doi: 10.1109/SIU66497.2025.11112336.
+
+**Keywords:**  
+Law; Face recognition; Data integrity; Neural networks; Contrastive learning; Writing; Signal processing; Digitization; Biometric authentication; Signature identification; contrastive learning; siamese neural network
+
+---
+
 ## Key Features
 - **One-shot signature identification**: Identify unseen signatures with only one example per user.
 - **Supervised Contrastive Learning (SupCon)**: Outperforms traditional pairwise and triplet loss approaches.
