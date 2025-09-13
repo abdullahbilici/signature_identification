@@ -15,8 +15,21 @@ Handwritten signatures are a powerful biometric authentication tool reflecting a
 
 ---
 
-**Citation:**  
-A. Bilici, E. Olug, S. Beyden and C. Topal, "One-Shot Signature Identification with Contrastive Learning," 2025 33rd Signal Processing and Communications Applications Conference (SIU), Sile, Istanbul, Turkiye, 2025, pp. 1-4, doi: 10.1109/SIU66497.2025.11112336.
+
+To cite our work:
+
+```bibtex
+@INPROCEEDINGS{11112336,
+  author={Bilici, Abdullah and Olug, Eren and Beyden, Salim and Topal, Cihan},
+  booktitle={2025 33rd Signal Processing and Communications Applications Conference (SIU)}, 
+  title={One-Shot Signature Identification with Contrastive Learning}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-4},
+  keywords={Law;Face recognition;Data integrity;Neural networks;Contrastive learning;Writing;Signal processing;Digitization;Biometric authentication;Signature identification;contrastive learning;siamese neural network},
+  doi={10.1109/SIU66497.2025.11112336}}
+```
 
 **Keywords:**  
 Law; Face recognition; Data integrity; Neural networks; Contrastive learning; Writing; Signal processing; Digitization; Biometric authentication; Signature identification; contrastive learning; siamese neural network
